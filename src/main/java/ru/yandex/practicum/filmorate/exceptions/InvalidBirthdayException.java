@@ -5,7 +5,4 @@ public class InvalidBirthdayException extends RuntimeException {
         super(message);
     }
 
-    InvalidBirthdayException(String message, Exception e) {
-        super(message, e);
-    }
 }
