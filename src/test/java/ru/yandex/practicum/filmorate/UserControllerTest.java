@@ -21,7 +21,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testCreateUserWithValidData() throws UserAlreadyExistException, InvalidLoginException, InvalidEmailException, InvalidBirthdayException {
+    public void testCreateUserWithValidData() throws RuntimeException {
         User user = new User();
         user.setLogin("john_doe");
         user.setEmail("john.doe@example.com");
