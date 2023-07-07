@@ -27,7 +27,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) throws RuntimeException {
+    public Film create(@RequestBody Film film) {
         checkFilmValidity(film); //проверяем соответствуют ли поля и при необходимости форматируем фильм
         film.setId(idCounter);
         idCounter++;
@@ -37,7 +37,7 @@ public class FilmController {
     }
 
 
-    private void checkFilmValidity(Film film) throws RuntimeException {
+    private void checkFilmValidity(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             log.error("Переданное название фильма некорректно: {}", film);
             throw new InvalidNameException("Переданное название фильма некорректно");
@@ -59,7 +59,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film put(@RequestBody Film film) throws RuntimeException {
+    public Film put(@RequestBody Film film) {
         if (!films.containsKey(film.getId())) {
             log.error("Фильм, который нужно обновить, не существует");
             throw new NoSuchFilmException("Фильм, который нужно обновить, не существует");
