@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exceptions.*;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        filmController = new FilmController();
+        //filmController = new FilmController();
     }
 
     @Test
@@ -124,7 +124,7 @@ public class FilmControllerTest {
         updatedFilm.setDuration(195);
         updatedFilm.setDescription("Специальное издание фильма о вымышленном крушении.");
         updatedFilm.setReleaseDate(LocalDate.of(1997, 12, 19));
-        Film result = filmController.put(updatedFilm);
+        Film result = filmController.update(updatedFilm);
 
         assertEquals(createdFilm.getId(), result.getId());
         assertEquals("Титаник (специальное издание)", result.getName());
@@ -142,6 +142,6 @@ public class FilmControllerTest {
         film.setDescription("Фильм о вымышленном крушении.");
         film.setReleaseDate(LocalDate.of(1997, 12, 19));
 
-        assertThrows(NoSuchFilmException.class, () -> filmController.put(film));
+        assertThrows(NoSuchFilmException.class, () -> filmController.update(film));
     }
 }

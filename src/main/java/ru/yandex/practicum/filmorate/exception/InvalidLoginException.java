@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.exceptions;
+package ru.yandex.practicum.filmorate.exception;
 
 public class InvalidLoginException extends RuntimeException {
     public InvalidLoginException(String message, Exception e) {

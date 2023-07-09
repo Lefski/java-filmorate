@@ -3,8 +3,9 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.exceptions.*;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userController = new UserController();
+        //userController = new UserController();
     }
 
     @Test
@@ -139,7 +140,7 @@ public class UserControllerTest {
         updatedUser.setLogin("john.doe.updated");
         updatedUser.setEmail("john.doe.updated@example.com");
         updatedUser.setBirthday(LocalDate.of(1992, 2, 2));
-        User result = userController.put(updatedUser);
+        User result = userController.update(updatedUser);
 
         assertEquals(createdUser.getId(), result.getId());
         assertEquals("john.doe.updated", result.getLogin());
@@ -156,6 +157,6 @@ public class UserControllerTest {
         user.setEmail("john.doe@example.com");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        assertThrows(NoSuchUserException.class, () -> userController.put(user));
+        assertThrows(NoSuchUserException.class, () -> userController.update(user));
     }
 }
