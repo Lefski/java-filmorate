@@ -20,12 +20,12 @@ public class User {
         friends = new HashSet<>();
     }
 
-    public void addFriend(int friendId){
+    public void addFriend(int friendId) {
         friends.add(friendId);
     }
 
-    public void removeFriend(int friendId){
-        if(!friends.contains(friendId)){
+    public void removeFriend(int friendId) {
+        if (!friends.contains(friendId)) {
             throw new NoSuchUserException("Переданного друга не существует в списке друзей");
         }
         friends.remove(friendId);

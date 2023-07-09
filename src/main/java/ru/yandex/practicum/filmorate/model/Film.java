@@ -16,7 +16,7 @@ public class Film {
     private Integer duration;
     private Set<Integer> likes;//храним id лайкнувших пользователей
 
-    public Film(){
+    public Film() {
         likes = new HashSet<>();
     }
 
@@ -25,7 +25,7 @@ public class Film {
     }
 
     public void removeLike(int userId) {
-        if (!likes.contains(userId)){
+        if (!likes.contains(userId)) {
             throw new NoSuchUserException("Такой пользователь не ставил лайк");
         }
         likes.remove(id);

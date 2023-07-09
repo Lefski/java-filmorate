@@ -44,7 +44,7 @@ public class FilmService {
 
     public List<Film> getTopFilms(int count) {
         List<Film> allFilms = inMemoryFilmStorage.getFilms();
-        if(allFilms.isEmpty()){
+        if (allFilms.isEmpty()) {
             return Collections.emptyList();
             //Уважаемый проверяющий, не уверен правильно ли возвращать пустой список. Есть ли смысл вызывать ошибку?
         }
@@ -55,7 +55,7 @@ public class FilmService {
         return allFilms.subList(0, Math.min(count, allFilms.size()));
     }
 
-    public Film getFilmById(int id){
+    public Film getFilmById(int id) {
         return inMemoryFilmStorage.getFilmById(id);
     }
 
