@@ -26,7 +26,7 @@ public class Film {
         if (!likes.contains(userId)) {
             throw new NoSuchUserException("Такой пользователь не ставил лайк");
         }
-        likes.remove(id);
+        likes.remove(userId);
     }
 
 }
