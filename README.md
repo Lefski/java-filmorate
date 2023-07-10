@@ -1,5 +1,6 @@
 # java-filmorate
 [link to ER-model](https://dbdiagram.io/d/64ac3b0202bd1c4a5ed1860b)
+![Screenshot of a ER-model](https://github.com/Lefski/java-filmorate/blob/main/ER_model.png)
 
 1. Получение всех фильмов
 ```sql
