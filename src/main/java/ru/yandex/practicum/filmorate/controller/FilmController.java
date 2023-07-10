@@ -1,74 +1,61 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private static final LocalDate FIRST_EVER_FILM_DATE = LocalDate.of(1895, 12, 28);
 
-    private int idCounter = 1;
+    private final FilmService filmService;
 
     @GetMapping
     public List<Film> getFilms() {
-        log.debug("Текущее кол-во фильмов: {}", films.size());
-        return new ArrayList<>(films.values());
+        log.info("Получен запроc на получение списка всех фильмов");
+        return filmService.getFilms();
     }
 
     @PostMapping
     public Film create(@RequestBody Film film) {
-        checkFilmValidity(film); //проверяем соответствуют ли поля и при необходимости форматируем фильм
-        film.setId(idCounter);
-        idCounter++;
-        log.debug("Добавлен film: {}", film);
-        films.put(film.getId(), film);
-        return film;
+        log.info("Получен запроc на добавление лайка на фильм");
+        return filmService.create(film);
     }
 
-
-    private void checkFilmValidity(Film film) {
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.error("Переданное название фильма некорректно: {}", film);
-            throw new InvalidNameException("Переданное название фильма некорректно");
-
-        }
-        if (film.getDescription().length() > 200) {
-            log.error("Переданное описание фильма некорректно: {}", film);
-            throw new InvalidDescriptionException("Переданное описание фильма некорректно");
-        }
-        if (film.getReleaseDate().isBefore(FIRST_EVER_FILM_DATE)) {
-            log.error("Переданная дата выхода фильма некорректна: {}", film);
-            throw new InvalidReleaseDateException("Переданная дата выхода фильма некорректна");
-        }
-        if (film.getDuration() < 0) {
-            log.error("Переданная длительность фильма некорректна: {}", film);
-            throw new InvalidDurationException("Переданная длительность фильма некорректна");
-        }
-
-    }
 
     @PutMapping
-    public Film put(@RequestBody Film film) {
-        if (!films.containsKey(film.getId())) {
-            log.error("Фильм, который нужно обновить, не существует");
-            throw new NoSuchFilmException("Фильм, который нужно обновить, не существует");
-        }
-        checkFilmValidity(film);
-        log.debug("Обновлен film: {}", film);
-        films.put(film.getId(), film);
-        return film;
+    public Film update(@RequestBody Film film) {
+        log.info("Получен запроc на обновление фильма");
+        return filmService.update(film);
     }
 
+    @PutMapping("/{id}/like/{userId}")
+    public void likeFilm(@PathVariable int id, @PathVariable int userId) {
+        log.info("Получен запроc на добавление лайка на фильм");
+        filmService.addLike(id, userId);
+    }
 
+    @DeleteMapping("/{id}/like/{userId}")
+    public void dislikeFilm(@PathVariable int id, @PathVariable int userId) {
+        log.info("Получен запроc на удаление лайка с фильма");
+        filmService.removeLike(id, userId);
+    }
+
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable int id) {
+        log.info("Получен запроc на поиск фильма по id");
+        return filmService.getFilmById(id);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(@RequestParam(required = false, defaultValue = "10") int count) {
+        log.info("Получен запроc на получение списка популярных фильмов");
+        return filmService.getTopFilms(count);
+    }
 }

@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exceptions.*;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,12 +14,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmControllerTest {
+    InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
+    FilmService filmService = new FilmService(inMemoryFilmStorage);
 
     private FilmController filmController;
 
     @BeforeEach
     public void setUp() {
-        filmController = new FilmController();
+        filmController = new FilmController(filmService);
     }
 
     @Test
@@ -46,7 +50,7 @@ public class FilmControllerTest {
         film.setDescription("Фильм о вымышленном крушении.");
         film.setReleaseDate(LocalDate.of(1997, 12, 19));
 
-        assertThrows(InvalidNameException.class, () -> filmController.create(film));
+        assertThrows(ValidationException.class, () -> filmController.create(film));
     }
 
     @Test
@@ -59,7 +63,7 @@ public class FilmControllerTest {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus porta risus nec.");
         film.setReleaseDate(LocalDate.of(1997, 12, 19));
 
-        assertThrows(InvalidDescriptionException.class, () -> filmController.create(film));
+        assertThrows(ValidationException.class, () -> filmController.create(film));
     }
 
     @Test
@@ -70,7 +74,7 @@ public class FilmControllerTest {
         film.setDescription("Фильм о вымышленном крушении.");
         film.setReleaseDate(LocalDate.of(1800, 1, 1));
 
-        assertThrows(InvalidReleaseDateException.class, () -> filmController.create(film));
+        assertThrows(ValidationException.class, () -> filmController.create(film));
     }
 
     @Test
@@ -81,12 +85,11 @@ public class FilmControllerTest {
         film.setDescription("Фильм о вымышленном крушении.");
         film.setReleaseDate(LocalDate.of(1997, 12, 19));
 
-        assertThrows(InvalidDurationException.class, () -> filmController.create(film));
+        assertThrows(ValidationException.class, () -> filmController.create(film));
     }
 
     @Test
-    public void testGetFilms() throws FilmAlreadyExistException, InvalidNameException, InvalidDurationException,
-            InvalidDescriptionException, InvalidReleaseDateException {
+    public void testGetFilms() {
         Film film1 = new Film();
         film1.setName("Титаник");
         film1.setDuration(180);
@@ -124,7 +127,7 @@ public class FilmControllerTest {
         updatedFilm.setDuration(195);
         updatedFilm.setDescription("Специальное издание фильма о вымышленном крушении.");
         updatedFilm.setReleaseDate(LocalDate.of(1997, 12, 19));
-        Film result = filmController.put(updatedFilm);
+        Film result = filmController.update(updatedFilm);
 
         assertEquals(createdFilm.getId(), result.getId());
         assertEquals("Титаник (специальное издание)", result.getName());
@@ -142,6 +145,6 @@ public class FilmControllerTest {
         film.setDescription("Фильм о вымышленном крушении.");
         film.setReleaseDate(LocalDate.of(1997, 12, 19));
 
-        assertThrows(NoSuchFilmException.class, () -> filmController.put(film));
+        assertThrows(NoSuchFilmException.class, () -> filmController.update(film));
     }
 }
