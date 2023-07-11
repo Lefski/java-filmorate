@@ -20,7 +20,7 @@ public class FilmService {
     private final FilmStorage inMemoryFilmStorage;
 
     public List<Film> getFilms() {
-        log.info("Выполнен запроc на обновление фильма");
+        log.info("Выполнен запроc на получение всех фильмов");
         return inMemoryFilmStorage.getFilms();
     }
 

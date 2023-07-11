@@ -56,8 +56,8 @@ ALTER TABLE friendships
 ALTER TABLE friendships
     ADD FOREIGN KEY (user_id_2) REFERENCES users (user_id);
 
-ALTER TABLE films
-    ADD FOREIGN KEY (film_id) REFERENCES film_likes (film_id);
+ALTER TABLE film_likes
+    ADD FOREIGN KEY (film_id) REFERENCES films (film_id);
 
 ALTER TABLE film_likes
     ADD FOREIGN KEY (user_id) REFERENCES users (user_id);

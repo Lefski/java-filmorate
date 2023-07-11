@@ -14,8 +14,37 @@ public class Film {
     private LocalDate releaseDate;
     private Integer duration;
     private String genre;
-    private String mpaRating;
+    private MpaRating mpa;
+    private Integer rate;
     private HashSet<Integer> likes = new HashSet<>();//храним id лайкнувших пользователей
+
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, String genre, MpaRating mpa) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.genre = genre;
+        this.mpa = mpa;
+    }
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, MpaRating mpa) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+    }
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
 
     public Film() {
     }

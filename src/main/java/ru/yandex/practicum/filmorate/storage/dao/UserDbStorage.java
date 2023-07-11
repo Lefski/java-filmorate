@@ -49,7 +49,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getUsers() {
-        String sql = "select * from USERS where USER_ID = ?";
+        String sql = "select * from USERS";
         List<User> users = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs));
         log.debug("Текущее кол-во пользователей: {}", users.size());
         return new ArrayList<>(users);
