@@ -2,18 +2,17 @@ package ru.yandex.practicum.filmorate.model;
 
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 @Data
-public class MpaRating {
+public class Mpa {
     Integer id;
     String name;
 
-    public MpaRating(Integer id, String name) {
+    public Mpa(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public MpaRating() {
+    public Mpa() {
     }
 }

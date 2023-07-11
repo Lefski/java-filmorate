@@ -20,7 +20,7 @@ public class ErrorHandler {
         return Map.of("ValidationException", e.getMessage());
     }
 
-    @ExceptionHandler({NoFilmsException.class, NoSuchFilmException.class, NoSuchUserException.class, UserHaveNoFriendsException.class})
+    @ExceptionHandler({NoFilmsException.class,NoSuchMpaException.class, NoSuchFilmException.class,NoSuchGenreException.class, NoSuchUserException.class, UserHaveNoFriendsException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFoundException(final RuntimeException e) {
         log.error("ErrorHandler поймал NotFoundException: {}", e.getMessage());
