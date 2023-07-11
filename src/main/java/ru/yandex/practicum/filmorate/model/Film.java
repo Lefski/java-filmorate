@@ -13,6 +13,8 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private Integer duration;
+    private String genre;
+    private String mpaRating;
     private HashSet<Integer> likes = new HashSet<>();//храним id лайкнувших пользователей
 
     public Film() {
