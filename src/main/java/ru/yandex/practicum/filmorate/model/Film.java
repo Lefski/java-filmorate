@@ -60,6 +60,13 @@ public class Film {
     public Film() {
     }
 
+    public Integer getRate() {
+        if (rate == null){
+            return 0;
+        }
+        return rate;
+    }
+
     public void addLike(int userId) {
         likes.add(userId);
     }
