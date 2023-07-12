@@ -17,16 +17,13 @@ import java.util.List;
 @Slf4j
 public class FilmService {
 
+    private final FilmStorage filmDbStorage;
+    private final FilmLikesDao filmLikesDao;
     @Autowired
     public FilmService(@Qualifier("filmDbStorage") FilmStorage filmDbStorage, FilmLikesDao filmLikesDao) {
         this.filmDbStorage = filmDbStorage;
         this.filmLikesDao = filmLikesDao;
     }
-
-
-
-    private final FilmStorage filmDbStorage;
-    private final FilmLikesDao filmLikesDao;
 
     public List<Film> getFilms() {
         log.info("Выполнен запроc на получение всех фильмов");
@@ -66,8 +63,8 @@ public class FilmService {
             log.info("Выполнен запроc на получение списка лучших фильмов, список пуст");
             return Collections.emptyList();
         }
-        for (Film film:allFilms) {
-            if (film.getRate() == 0){
+        for (Film film : allFilms) {
+            if (film.getRate() == 0) {
                 film.setRate(filmLikesDao.getFilmLikesById(film.getId()).size());
             }
         }
