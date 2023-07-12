@@ -79,5 +79,24 @@ ALTER TABLE film_genre
 ALTER TABLE film_genre
     ADD FOREIGN KEY (genre_id) REFERENCES genre (genre_id);
 
+INSERT INTO friendship_status
+VALUES (1, 'confirmed'),
+       (2, 'not confirmed');
+
+INSERT INTO genre
+VALUES (1, 'Комедия'),
+       (2, 'Драма'),
+       (3, 'Мультфильм'),
+       (4, 'Триллер'),
+       (5, 'Документальный'),
+       (6, 'Боевик');
+INSERT INTO mpa_rating
+VALUES (1, 'G'),
+       (2, 'PG'),
+       (3, 'PG-13'),
+       (4, 'R'),
+       (5, 'NC-17');
+
+
 
 
