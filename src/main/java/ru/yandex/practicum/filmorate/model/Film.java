@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.yandex.practicum.filmorate.exception.NoSuchUserException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public class Film {
     }
 
     public List<Genre> getGenres() {
+        if (genres == null){
+            return new ArrayList<>();
+        }
             return genres;
     }
 

@@ -51,8 +51,9 @@ CREATE TABLE IF NOT EXISTS mpa_rating
 
 CREATE TABLE IF NOT EXISTS film_genre
 (
-    film_id  integer PRIMARY KEY,
-    genre_id integer
+    film_id  integer,
+    genre_id integer,
+    PRIMARY KEY (film_id, genre_id)
 );
 
 ALTER TABLE friendships
@@ -96,6 +97,8 @@ VALUES (1, 'G'),
        (3, 'PG-13'),
        (4, 'R'),
        (5, 'NC-17');
+
+
 
 
 

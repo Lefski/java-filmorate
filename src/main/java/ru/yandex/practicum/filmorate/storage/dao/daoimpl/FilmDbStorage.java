@@ -17,29 +17,24 @@ import ru.yandex.practicum.filmorate.storage.dao.FilmGenreDao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-@Qualifier ("filmDbStorage")
+@Qualifier("filmDbStorage")
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private static final LocalDate FIRST_EVER_FILM_DATE = LocalDate.of(1895, 12, 28);
-    private int idCounter = 1;
-
     private final JdbcTemplate jdbcTemplate;
     private final FilmGenreDao filmGenreDao;
-
-
+    private int idCounter = 1;
 
     @Override
     public Film getFilmById(Integer id) {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("select * from FILMS where FILM_ID = ?", id);
         if (filmRows.next()) {
             List<Genre> genres = filmGenreDao.getFilmGenresById(id);
-            Film film = new Film(filmRows.getInt("FILM_ID"),genres, filmRows.getString("NAME"),
-                    filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"), getMpaRating(filmRows.getInt("MPA_RATING_ID")));
+            Film film = new Film(filmRows.getInt("FILM_ID"), genres, filmRows.getString("NAME"), filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"), getMpaRating(filmRows.getInt("MPA_RATING_ID")));
 
             log.info("Найден фильм: {} {}", film.getId(), film.getName());
 
@@ -56,8 +51,7 @@ public class FilmDbStorage implements FilmStorage {
     public Mpa getMpaRating(Integer id) {
         SqlRowSet mpaRaw = jdbcTemplate.queryForRowSet("select MPA_RATING from MPA_RATING where MPA_RATING_ID = ?", id);
         if (mpaRaw.next()) {
-            Mpa rating = new Mpa(id, mpaRaw.getString("MPA_RATING"));
-            return rating;
+            return new Mpa(id, mpaRaw.getString("MPA_RATING"));
         } else throw new ValidationException("Такого рейтинга не существует");
     }
 
@@ -72,7 +66,7 @@ public class FilmDbStorage implements FilmStorage {
 
     private Film makeFilm(ResultSet filmRows) throws SQLException {
         List<Genre> genres = filmGenreDao.getFilmGenresById(filmRows.getInt("FILM_ID"));
-        return new Film(filmRows.getInt("FILM_ID"), genres,filmRows.getString("NAME"), filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"), getMpaRating(filmRows.getInt("MPA_RATING_ID")));
+        return new Film(filmRows.getInt("FILM_ID"), genres, filmRows.getString("NAME"), filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"), getMpaRating(filmRows.getInt("MPA_RATING_ID")));
     }
 
     @Override
@@ -82,27 +76,21 @@ public class FilmDbStorage implements FilmStorage {
         idCounter++;
         log.debug("Добавлен film: {}", film);
         save(film);
+        filmGenreDao.updateGenresInTableFilm(film);
         return film;
     }
 
     private void save(Film film) {
         String sqlQuery = "insert into FILMS(FILM_ID, NAME, DESCRIPTION, RELEASEDATE, DURATION, MPA_RATING_ID) " + "values (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(
-                sqlQuery,
-                film.getId(),
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration(),
-                film.getMpa().getId()
-        );
+        jdbcTemplate.update(sqlQuery, film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
+
 
     }
 
     @Override
     public Film update(Film film) {
+        film.setGenres(getDistinct(film.getGenres()));
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("select * from FILMS where FILM_ID = ?", film.getId());
-
         if (!filmRows.next()) {
             log.error("Фильм, который нужно обновить, не существует");
             throw new NoSuchFilmException("Фильм, который нужно обновить, не существует");
@@ -110,22 +98,20 @@ public class FilmDbStorage implements FilmStorage {
         checkFilmValidity(film);
         log.debug("Обновлен film: {}", film);
         saveUpdate(film);
+        filmGenreDao.updateGenresInTableFilm(film);
         return film;
     }
 
-    private void saveUpdate(Film film){
+    private void saveUpdate(Film film) {
         String sqlQuery = "update FILMS set " + "FILM_ID = ?, NAME = ?, DESCRIPTION = ?, RELEASEDATE = ?, DURATION = ?, MPA_RATING_ID = ? WHERE FILM_ID = " + film.getId();
-        jdbcTemplate.update(
-                sqlQuery,
-                film.getId(),
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration(),
-                film.getMpa().getId()
-        );
+        jdbcTemplate.update(sqlQuery, film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
+    }
 
-
+    private static List<Genre> getDistinct(List<Genre> genres) {
+        Set<Genre> set = new LinkedHashSet<>(genres);
+        genres.clear();
+        genres.addAll(set);
+        return genres;
     }
 
     private void checkFilmValidity(Film film) {
