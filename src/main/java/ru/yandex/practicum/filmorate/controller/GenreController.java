@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.dao.daoimpl.GenreDaoImpl;
+import ru.yandex.practicum.filmorate.service.GenreService;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,18 +19,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GenreController {
 
-    private final GenreDaoImpl genreDao;
+    private final GenreService genreService;
 
     @GetMapping
     public List<Genre> getGenre() {
         log.info("Получен запроc на получение списка всех жанров");
-        return genreDao.getGenres();
+        return genreService.getGenre();
     }
 
     @GetMapping("/{id}")
     public Optional<Genre> getGenreById(@PathVariable int id) {
         log.info("Получен запроc на поиск жанра по id");
-        return genreDao.getGenreById(id);
+        return genreService.getGenreById(id);
     }
 
 }

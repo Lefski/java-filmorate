@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class Mpa {
-    Integer id;
-    String name;
+    private Integer id;
+    private String name;
 
     public Mpa(Integer id, String name) {
         this.id = id;
