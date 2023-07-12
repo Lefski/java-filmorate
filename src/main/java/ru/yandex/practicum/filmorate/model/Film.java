@@ -20,7 +20,7 @@ public class Film {
     private Integer rate;
     private HashSet<Integer> likes = new HashSet<>();//храним id лайкнувших пользователей
 
-    public Film(Integer id,List<Genre> genres, String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
+    public Film(Integer id, List<Genre> genres, String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,18 +30,18 @@ public class Film {
         this.mpa = mpa;
     }
 
-    public List<Genre> getGenres() {
-        if (genres == null){
-            return new ArrayList<>();
-        }
-            return genres;
-    }
-
     public Film() {
     }
 
+    public List<Genre> getGenres() {
+        if (genres == null) {
+            return new ArrayList<>();
+        }
+        return genres;
+    }
+
     public Integer getRate() {
-        if (rate == null){
+        if (rate == null) {
             return 0;
         }
         return rate;
