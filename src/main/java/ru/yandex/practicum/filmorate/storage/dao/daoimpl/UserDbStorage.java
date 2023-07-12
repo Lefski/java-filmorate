@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Qualifier("filmDbStorage")
+@Qualifier("userDbStorage")
 @Component
 @Slf4j
 public class UserDbStorage implements UserStorage {

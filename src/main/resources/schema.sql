@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS users
 (
     user_id  integer PRIMARY KEY,
-    email    varchar,
-    login    varchar,
-    name     varchar,
+    email    varchar(50),
+    login    varchar(50),
+    name     varchar(50),
     birthday date
 );
 
@@ -18,14 +18,14 @@ CREATE TABLE IF NOT EXISTS friendships
 CREATE TABLE IF NOT EXISTS friendship_status
 (
     friendship_status_id integer PRIMARY KEY,
-    status               varchar
+    status               varchar(20)
 );
 
 CREATE TABLE IF NOT EXISTS films
 (
     film_id       integer PRIMARY KEY,
-    name          varchar,
-    description   varchar,
+    name          varchar(50),
+    description   varchar(200),
     releaseDate   date,
     duration      integer,
     mpa_rating_id integer
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS films
 CREATE TABLE IF NOT EXISTS genre
 (
     genre_id integer PRIMARY KEY,
-    name     varchar
+    name     varchar(50)
 );
 
 CREATE TABLE IF NOT EXISTS film_likes
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS film_likes
 CREATE TABLE IF NOT EXISTS mpa_rating
 (
     mpa_rating_id integer PRIMARY KEY,
-    mpa_rating    varchar
+    mpa_rating    varchar(50)
 );
 
 CREATE TABLE IF NOT EXISTS film_genre
