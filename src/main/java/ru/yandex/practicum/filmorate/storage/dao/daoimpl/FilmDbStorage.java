@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao.daoimpl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.dao.FilmGenreDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,25 +23,23 @@ import java.util.List;
 @Qualifier ("filmDbStorage")
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private static final LocalDate FIRST_EVER_FILM_DATE = LocalDate.of(1895, 12, 28);
     private int idCounter = 1;
 
     private final JdbcTemplate jdbcTemplate;
+    private final FilmGenreDao filmGenreDao;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
 
     @Override
     public Film getFilmById(Integer id) {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("select * from FILMS where FILM_ID = ?", id);
         if (filmRows.next()) {
-            List<Genre> genres = new ArrayList<>();
-            genres.add(new Genre((filmRows.getInt("GENRE_ID"))));
-            Film film = new Film(filmRows.getInt("FILM_ID"), filmRows.getString("NAME"),
-                    filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"), genres, getMpaRating(filmRows.getInt("MPA_RATING_ID")));
+            List<Genre> genres = filmGenreDao.getFilmGenresById(id);
+            Film film = new Film(filmRows.getInt("FILM_ID"),genres, filmRows.getString("NAME"),
+                    filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"), getMpaRating(filmRows.getInt("MPA_RATING_ID")));
 
             log.info("Найден фильм: {} {}", film.getId(), film.getName());
 
@@ -50,7 +50,6 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public Genre getGenre(Integer id) {
-
         return new Genre(id);
     }
 
@@ -72,10 +71,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private Film makeFilm(ResultSet filmRows) throws SQLException {
-        List<Genre> genres = new ArrayList<>();
-        genres.add(getGenre(filmRows.getInt("GENRE_ID")));
-        return new Film(filmRows.getInt("FILM_ID"), filmRows.getString("NAME"), filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"),
-                genres, getMpaRating(filmRows.getInt("MPA_RATING_ID")));
+        List<Genre> genres = filmGenreDao.getFilmGenresById(filmRows.getInt("FILM_ID"));
+        return new Film(filmRows.getInt("FILM_ID"), genres,filmRows.getString("NAME"), filmRows.getString("DESCRIPTION"), filmRows.getDate("RELEASEDATE").toLocalDate(), filmRows.getInt("DURATION"), getMpaRating(filmRows.getInt("MPA_RATING_ID")));
     }
 
     @Override
@@ -89,7 +86,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private void save(Film film) {
-        String sqlQuery = "insert into FILMS(FILM_ID, NAME, DESCRIPTION, RELEASEDATE, DURATION, GENRE_ID, MPA_RATING_ID) " + "values (?, ?, ?, ?, ?, ?, ?)";
+        String sqlQuery = "insert into FILMS(FILM_ID, NAME, DESCRIPTION, RELEASEDATE, DURATION, MPA_RATING_ID) " + "values (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(
                 sqlQuery,
                 film.getId(),
@@ -97,7 +94,6 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getGenres().get(0).getId(),
                 film.getMpa().getId()
         );
 
@@ -118,7 +114,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private void saveUpdate(Film film){
-        String sqlQuery = "update FILMS set " + "FILM_ID = ?, NAME = ?, DESCRIPTION = ?, RELEASEDATE = ?, DURATION = ?, GENRE_ID = ?, MPA_RATING_ID = ? WHERE FILM_ID = " + film.getId();
+        String sqlQuery = "update FILMS set " + "FILM_ID = ?, NAME = ?, DESCRIPTION = ?, RELEASEDATE = ?, DURATION = ?, MPA_RATING_ID = ? WHERE FILM_ID = " + film.getId();
         jdbcTemplate.update(
                 sqlQuery,
                 film.getId(),
@@ -126,7 +122,6 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getGenres().get(0).getId(),
                 film.getMpa().getId()
         );
 

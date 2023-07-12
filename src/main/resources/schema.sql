@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS films
     description   varchar,
     releaseDate   date,
     duration      integer,
-    genre_id      integer,
     mpa_rating_id integer
 );
 
@@ -50,6 +49,12 @@ CREATE TABLE IF NOT EXISTS mpa_rating
     mpa_rating    varchar
 );
 
+CREATE TABLE IF NOT EXISTS film_genre
+(
+    film_id  integer PRIMARY KEY,
+    genre_id integer
+);
+
 ALTER TABLE friendships
     ADD FOREIGN KEY (user_id_1) REFERENCES users (user_id);
 
@@ -63,12 +68,16 @@ ALTER TABLE film_likes
     ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 ALTER TABLE films
-    ADD FOREIGN KEY (genre_id) REFERENCES genre (genre_id);
-
-ALTER TABLE films
     ADD FOREIGN KEY (mpa_rating_id) REFERENCES mpa_rating (mpa_rating_id);
 
 ALTER TABLE friendships
     ADD FOREIGN KEY (friendship_status_id) REFERENCES friendship_status (friendship_status_id);
+
+ALTER TABLE film_genre
+    ADD FOREIGN KEY (film_id) REFERENCES films (film_id);
+
+ALTER TABLE film_genre
+    ADD FOREIGN KEY (genre_id) REFERENCES genre (genre_id);
+
 
 

@@ -30,12 +30,12 @@ public class MpaDaoImpl implements MpaDao {
                     userRows.getInt("MPA_RATING_ID"),
                     userRows.getString("MPA_RATING"));
 
-            log.info("Найден жанр: {} {}", mpa.getId(), mpa.getName());
+            log.info("Найден рейтинг: {} {}", mpa.getId(), mpa.getName());
 
             return Optional.of(mpa);
         } else {
-            log.info("Жанр с идентификатором {} не найден.", id);
-            throw new NoSuchMpaException("Жанр с идентификатором {} не найден.");
+            log.info("Рейтинг с идентификатором {} не найден.", id);
+            throw new NoSuchMpaException("Рейтинг с идентификатором {} не найден.");
         }
 
     }
