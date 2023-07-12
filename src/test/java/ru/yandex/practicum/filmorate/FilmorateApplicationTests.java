@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.storage.dao.daoimpl.UserDbStorage;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class FilmoRateApplicationTests {
+class FilmorateApplicationTests {
 	private final UserDbStorage userStorage;
 
 	@Test
