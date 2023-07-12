@@ -25,6 +25,13 @@ public class FilmGenreDaoImpl implements FilmGenreDao {
     private final JdbcTemplate jdbcTemplate;
     private final GenreDao genreDao;
 
+    private static List<Genre> getDistinct(List<Genre> genres) {
+        Set<Genre> set = new HashSet<>(genres);
+        genres.clear();
+        genres.addAll(set);
+        return genres;
+    }
+
     @Override
     public List<Genre> getFilmGenresById(Integer filmId) {
         //поставить проверки filmId
@@ -34,29 +41,18 @@ public class FilmGenreDaoImpl implements FilmGenreDao {
         for (Integer id : genresIds) {
             sql = "SELECT NAME FROM GENRE WHERE GENRE_ID = ?";
             List<String> str = jdbcTemplate.queryForList(sql, String.class, id);
-             genres.add(new Genre(id, str.get(0)));
+            genres.add(new Genre(id, str.get(0)));
         }
         return getDistinct(genres);
-    }
-
-    private static List<Genre> getDistinct(List<Genre> genres) {
-        Set<Genre> set = new HashSet<>(genres);
-        genres.clear();
-        genres.addAll(set);
-        return genres;
     }
 
     @Override
     public void addGenreFilm(Integer filmId, Integer genreId) {
 
         if (!getFilmGenresById(filmId).contains(genreDao.getGenreById(genreId))) {
-            String sqlQuery = "insert into FILM_GENRE(FILM_ID, GENRE_ID) " +
-                    "values (?, ?)";
-            jdbcTemplate.update(sqlQuery,
-                    filmId,
-                    genreId);
-        } else
-            throw new ValidationException("Genre " + genreId + " of film " + filmId + " already exists in db");
+            String sqlQuery = "insert into FILM_GENRE(FILM_ID, GENRE_ID) " + "values (?, ?)";
+            jdbcTemplate.update(sqlQuery, filmId, genreId);
+        } else throw new ValidationException("Genre " + genreId + " of film " + filmId + " already exists in db");
     }
 
     @Override
@@ -68,14 +64,12 @@ public class FilmGenreDaoImpl implements FilmGenreDao {
         if (externalGenres.equals(savedGenres)) {
             return;
         }
-        for (int i :
-                externalGenres) {
+        for (int i : externalGenres) {
             if (!savedGenres.contains(i)) {
                 addGenreFilm(film.getId(), i);
             }
         }
-        for (int i :
-                savedGenres) {
+        for (int i : savedGenres) {
             if (!externalGenres.contains(i)) {
                 removeGenreFilm(film.getId(), i);
             }

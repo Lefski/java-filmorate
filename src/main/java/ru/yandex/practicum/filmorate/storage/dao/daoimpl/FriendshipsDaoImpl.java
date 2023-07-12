@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.storage.dao.FriendshipsDao;
 
 import java.util.List;
+
 @RequiredArgsConstructor
 @Slf4j
 @Component
@@ -30,12 +31,8 @@ public class FriendshipsDaoImpl implements FriendshipsDao {
         checkId(friendId);
         if (!getFriendsListByUserId(friendId).contains(friendId)) {
 
-            String sqlQuery = "insert into FRIENDSHIPS(USER_ID_1, USER_ID_2, FRIENDSHIP_STATUS_ID) " +
-                    "values (?, ?, ?)";
-            jdbcTemplate.update(sqlQuery,
-                    userId,
-                    friendId,
-                    1);
+            String sqlQuery = "insert into FRIENDSHIPS(USER_ID_1, USER_ID_2, FRIENDSHIP_STATUS_ID) " + "values (?, ?, ?)";
+            jdbcTemplate.update(sqlQuery, userId, friendId, 1);
         } else
             throw new ValidationException("Friendship of user " + userId + " and user " + friendId + " already exists");
     }
@@ -51,7 +48,7 @@ public class FriendshipsDaoImpl implements FriendshipsDao {
         } else throw new NoSuchFriendShipException("Переданного друга нет в списке друзей");
     }
 
-    private void checkId(Integer id){
+    private void checkId(Integer id) {
         userDbStorage.getUserById(id);
     }
 }

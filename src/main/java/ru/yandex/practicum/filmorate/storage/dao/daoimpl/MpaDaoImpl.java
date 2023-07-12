@@ -19,16 +19,15 @@ import java.util.Optional;
 public class MpaDaoImpl implements MpaDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public MpaDaoImpl(JdbcTemplate jdbcTemplate){
-        this.jdbcTemplate=jdbcTemplate;
+    public MpaDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
-    public Optional<Mpa> getMpaById(Integer id){
+    public Optional<Mpa> getMpaById(Integer id) {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from MPA_RATING where MPA_RATING_ID = ?", id);
-        if(userRows.next()) {
-            Mpa mpa = new Mpa(
-                    userRows.getInt("MPA_RATING_ID"),
-                    userRows.getString("MPA_RATING"));
+        if (userRows.next()) {
+            Mpa mpa = new Mpa(userRows.getInt("MPA_RATING_ID"), userRows.getString("MPA_RATING"));
 
             log.info("Найден рейтинг: {} {}", mpa.getId(), mpa.getName());
 
@@ -41,11 +40,10 @@ public class MpaDaoImpl implements MpaDao {
     }
 
     @Override
-    public List<Mpa> getMPAs(){
+    public List<Mpa> getMPAs() {
         String sql = "select * from MPA_RATING";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeMPA(rs));
     }
-
 
 
     private Mpa makeMPA(ResultSet rs) throws SQLException {

@@ -17,7 +17,10 @@ import ru.yandex.practicum.filmorate.storage.dao.FilmGenreDao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Qualifier("filmDbStorage")
 @Component
@@ -28,6 +31,13 @@ public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final FilmGenreDao filmGenreDao;
     private int idCounter = 1;
+
+    private static List<Genre> getDistinct(List<Genre> genres) {
+        Set<Genre> set = new LinkedHashSet<>(genres);
+        genres.clear();
+        genres.addAll(set);
+        return genres;
+    }
 
     @Override
     public Film getFilmById(Integer id) {
@@ -105,13 +115,6 @@ public class FilmDbStorage implements FilmStorage {
     private void saveUpdate(Film film) {
         String sqlQuery = "update FILMS set " + "FILM_ID = ?, NAME = ?, DESCRIPTION = ?, RELEASEDATE = ?, DURATION = ?, MPA_RATING_ID = ? WHERE FILM_ID = " + film.getId();
         jdbcTemplate.update(sqlQuery, film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
-    }
-
-    private static List<Genre> getDistinct(List<Genre> genres) {
-        Set<Genre> set = new LinkedHashSet<>(genres);
-        genres.clear();
-        genres.addAll(set);
-        return genres;
     }
 
     private void checkFilmValidity(Film film) {

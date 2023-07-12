@@ -24,13 +24,9 @@ public class FilmLikesDaoImpl implements FilmLikesDao {
         checkFilmId(filmId);
         checkUserId(userId);
         if (!getFilmLikesById(filmId).contains(userId)) {
-            String sqlQuery = "insert into FILM_LIKES(FILM_ID, USER_ID) " +
-                    "values (?, ?)";
-            jdbcTemplate.update(sqlQuery,
-                    filmId,
-                    userId);
-        } else
-            throw new ValidationException("Like on film " + filmId + " by user " + userId + " already exists");
+            String sqlQuery = "insert into FILM_LIKES(FILM_ID, USER_ID) " + "values (?, ?)";
+            jdbcTemplate.update(sqlQuery, filmId, userId);
+        } else throw new ValidationException("Like on film " + filmId + " by user " + userId + " already exists");
 
     }
 

@@ -32,12 +32,7 @@ public class UserDbStorage implements UserStorage {
     public User getUserById(Integer id) {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from USERS where USER_ID = ?", id);
         if (userRows.next()) {
-            User user = new User(
-                    userRows.getInt("USER_ID"),
-                    userRows.getString("EMAIL"),
-                    userRows.getString("LOGIN"),
-                    userRows.getString("NAME"),
-                    userRows.getDate("BIRTHDAY").toLocalDate());
+            User user = new User(userRows.getInt("USER_ID"), userRows.getString("EMAIL"), userRows.getString("LOGIN"), userRows.getString("NAME"), userRows.getDate("BIRTHDAY").toLocalDate());
 
             log.info("Найден пользователь: {} {}", user.getId(), user.getLogin());
 
@@ -56,11 +51,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     private User makeUser(ResultSet userRows) throws SQLException {
-        return new User(userRows.getInt("USER_ID"),
-                userRows.getString("EMAIL"),
-                userRows.getString("LOGIN"),
-                userRows.getString("NAME"),
-                userRows.getDate("BIRTHDAY").toLocalDate());
+        return new User(userRows.getInt("USER_ID"), userRows.getString("EMAIL"), userRows.getString("LOGIN"), userRows.getString("NAME"), userRows.getDate("BIRTHDAY").toLocalDate());
     }
 
     @Override
@@ -74,14 +65,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     public void save(User user) {
-        String sqlQuery = "insert into USERS(USER_ID, EMAIL, LOGIN, NAME, BIRTHDAY) " +
-                "values (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sqlQuery,
-                user.getId(),
-                user.getEmail(),
-                user.getLogin(),
-                user.getName(),
-                user.getBirthday());
+        String sqlQuery = "insert into USERS(USER_ID, EMAIL, LOGIN, NAME, BIRTHDAY) " + "values (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sqlQuery, user.getId(), user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
     }
 
     @Override
@@ -99,12 +84,7 @@ public class UserDbStorage implements UserStorage {
 
     public void saveUpdate(User user) {
         String sqlQuery = "update USERS set " + "USER_ID = ?, EMAIL = ?, LOGIN = ?, NAME = ?, BIRTHDAY = ?";
-        jdbcTemplate.update(sqlQuery,
-                user.getId(),
-                user.getEmail(),
-                user.getLogin(),
-                user.getName(),
-                user.getBirthday());
+        jdbcTemplate.update(sqlQuery, user.getId(), user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
     }
 
     private User checkUserValidity(User user) {
