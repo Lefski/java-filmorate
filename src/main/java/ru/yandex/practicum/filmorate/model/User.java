@@ -18,6 +18,23 @@ public class User {
     public User() {
     }
 
+    public User(int id, String email, String login, String name, LocalDate birthday) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+    }
+
+    public User(int id, String email, String login, String name, LocalDate birthday, HashSet<Integer> friends) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+        this.friends = friends;
+    }
+
     public void addFriend(int friendId) {
         friends.add(friendId);
     }
